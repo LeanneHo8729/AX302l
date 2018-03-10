@@ -35,8 +35,96 @@
 
 		lifelabel = game.add.text(10,5,"Life", style);
 		lifetext = game.add.text(120,5,life,style);
+		player = game.add.sprite(32,400,'dude');
+			player.animations.add('left',[0,1,2,3], true)
+			player.animations.add('right',[0,1,2,3], true)
+			game.physics.arcade.enable(player);
+			player.body.bounce.y = 0,2;
+			player.body.gravity.y = 300;
+			player.body.collideWorldBounds = true;
+		enemy1 = game.add.sprite(760,20,'baddie');
+		enemy1.anaimations.add(left, [0,1], 10, true);
+		enemy1.anaimations.add(left, [2,3], 10, true);
+		game.physics.arcade.enable(enemy1)
+		enemy1.body.bounce.y = 0,2;
+			enemy1.body.gravity.y = 300;
+			enemy1.body.collideWorldBounds = true;
+		stars = game.add.physicsGroup();
+		stars.enableBody = true;
+		#We will creat 12 stars evenly spaced
+		for(var i = 0, 1<12; i++){
+			var star = stars.create(i+70,0,'star');
+			star.body.garvity.y = 200;
+			star.body.bounce.y = 0.7 + Math.random() + 0.2;
+		}
+
+		}
+	function update(){c
+		game.physics.arcade.collide(player, platforms);
+		game.physics.arcade.collide(stars, plstform);
+		game.physics.arcade.collide(enemy1, platforms);
+
+		player.body.velocity.x = 0;
+
+		if(curcors.left.isDown){
+			player.body.velocity.x = -150;
+			player.animations.play('left');
+		}
+		else if(cursor.right.isDown){
+			player.body.velocity.x = 150;
+			player.animation.play('right');
+		}
+		/*else if(cursor.right.isUp){
+			player.body.velocity.y = -150;
+			player.animation.play('up');
+		}
+		else if(cursor.right.isUp){
+			player.body.velocity.y = 150;
+		s	player.animation.play('up');
+		}*/
+		else{
+			player.animations.stop();
+			player.frame = 4;
+		}
+		if(cursors.up.isDown && player.body.touching_down){
+			player.body.velocity.y= -300;
+		}
+		game.physics.arcade.overlap(player, stars, collectStar);
+		game.physics.arcade.overlap(player, enemy1, loseLife);
+		moveEnemy();
+		if(life<0){
+			endGame();
+					}
 	}
-	function update(){
+	function collectStar(player, star){
+		score = scroe + 1;
+		scoretext.setText(score);
+		star.kill();
+		star.reset(Math.floor(Math.random()*750),0);
+	}
+	function loseLife(player.enemy){
+		life = life -1;
+		lifetext.setText(life);
+
+		enemy.kill();
+		enemy.reset(Math.floor(Math.random()*750),0);
+	}
+	function moveEnemey(){
+		if(enemy1.x > 759)
+			enemy1.animations.play('left');
+		enemy1.body.velocity.x= - 120;
+	}
+	else if(enemy1.x > 405){
+		enemy1.animations.play('right');
+		enemy1.body.velocity.x= 120;
+
+	}
+	function endGame(){
+		player.kill();
+		scorelabel.text = "GAME OVER! You scored" + score;
+		scoretext.visible = false;
+		lifelabel.visible = false;
+		lifetext.visible = false;
 	}
 	</script>
 </body>
